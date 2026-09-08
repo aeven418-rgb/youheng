@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>游衡｜城市文旅智能分流</title>
+
+<style>
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+    background: #f5f7fa;
+    color: #1f2937;
+}
+
+.container {
+    max-width: 480px;
+    margin: auto;
+    padding: 24px 18px 40px;
+}
+
+.logo {
+    font-size: 30px;
+    font-weight: 800;
+}
+
+.subtitle {
+    color: #6b7280;
+    margin-top: 4px;
+    margin-bottom: 28px;
+}
+
+.card {
+    background: white;
+    border-radius: 20px;
+    padding: 20px;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,.05);
+}
+
+h2 {
+    font-size: 18px;
+    margin-top: 0;
+}
+
+.location {
+    font-size: 15px;
+    color: #4b5563;
+}
+
+.status {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.badge {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 6px 10px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.progress {
+    height: 10px;
+    background: #e5e7eb;
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 12px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 92%;
+    background: #ef4444;
+}
+
+.options {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}
+
+.option {
+    border: 1px solid #d1d5db;
+    padding: 10px 14px;
+    border-radius: 12px;
+    background: white;
+    cursor: pointer;
+}
+
+.option.selected {
+    background: #111827;
+    color: white;
+    border-color: #111827;
+}
+
+button {
+    width: 100%;
+    border: none;
+    padding: 15px;
+    border-radius: 15px;
+    background: #111827;
+    color: white;
+    font-size: 16px;
+    font-weight: 700;
+    cursor: pointer;
+}
+
+.result {
+    display: none;
+}
+
+.route {
+    border-left: 3px solid #111827;
+    padding-left: 14px;
+    margin-top: 14px;
+}
+
+.route strong {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.small {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+.highlight {
+    font-weight: 700;
+    color: #111827;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <div class="logo">游衡</div>
+    <div class="subtitle">城市文旅智能分流平台</div>
+
+    <div class="card">
+        <h2>📍 当前目的地</h2>
+        <div class="location">上海 · 外滩</div>
+    </div>
+
+    <div class="card">
+        <div class="status">
+            <h2>当前客流状态</h2>
+            <span class="badge">高拥挤</span>
+        </div>
+
+        <div class="progress">
+            <div class="progress-bar"></div>
+        </div>
+
+        <p class="small">
+            当前拥挤度约 <span class="highlight">92%</span>
+        </p>
+    </div>
+
+    <div class="card">
+        <h2>你想怎么玩？</h2>
+
+        <div class="options">
+            <div class="option">摄影</div>
+            <div class="option">美食</div>
+            <div class="option">历史文化</div>
+            <div class="option">休闲</div>
+            <div class="option">夜游</div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h2>你还有多少时间？</h2>
+
+        <div class="options">
+            <div class="option">1小时</div>
+            <div class="option">2小时</div>
+            <div class="option">半天</div>
+            <div class="option">全天</div>
+        </div>
+    </div>
+
+    <button onclick="generateRoute()">
+        帮我避开拥堵
+    </button>
+
+    <div class="card result" id="result">
+
+        <h2>智能分流方案</h2>
+
+        <p>
+            检测到外滩当前处于
+            <span class="highlight">高拥挤状态</span>。
+        </p>
+
+        <p>
+            根据你的兴趣与剩余时间，
+            游衡为你推荐一条低拥挤替代路线。
+        </p>
+
+        <div class="route">
+
+            <strong>① 外滩</strong>
+            <span class="small">当前拥挤度 92% · 建议离开</span>
+
+            <br>
+
+            <strong>↓ 步行约 12 分钟</strong>
+
+            <br>
+
+            <strong>② 上海邮政博物馆</strong>
+            <span class="small">拥挤度 38% · 城市文化 · 摄影</span>
+
+            <br>
+
+            <strong>↓ 步行约 8 分钟</strong>
+
+            <br>
+
+            <strong>③ 北外滩滨江</strong>
+            <span class="small">拥挤度 31% · 江景摄影 · 休闲</span>
+
+        </div>
+
+        <p class="small">
+            预计游览时间：2小时<br>
+            预计消费：¥60<br>
+            预计避开人流：约54%
+        </p>
+
+    </div>
+
+</div>
+
+<script>
+
+document.querySelectorAll(".option").forEach(option => {
+
+    option.addEventListener("click", function() {
+
+        const group = this.parentElement;
+
+        group.querySelectorAll(".option").forEach(item => {
+            item.classList.remove("selected");
+        });
+
+        this.classList.add("selected");
+
+    });
+
+});
+
+function generateRoute() {
+
+    document.getElementById("result").style.display = "block";
+
+    document.getElementById("result")
+        .scrollIntoView({
+            behavior: "smooth"
+        });
+}
+
+</script>
+
+</body>
+</html>
